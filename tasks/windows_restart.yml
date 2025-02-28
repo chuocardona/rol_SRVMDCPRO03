@@ -1,0 +1,4 @@
+---
+- name: Reiniciar el servidor Windows
+  ansible.windows.win_reboot:
+    reboot_timeout: 600  # Tiempo de espera para que el servidor se reinicie (en segundos)
