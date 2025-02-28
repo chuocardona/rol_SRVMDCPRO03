@@ -1,0 +1,5 @@
+# vars/main.yml
+service_name: MiServicio
+directory_path: C:\MiDirectorio
+source_path: C:\Origen\archivo.txt
+destination_path: C:\Destino\archivo.txt
