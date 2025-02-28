@@ -1,0 +1,17 @@
+---
+- name: Ejecutar tareas en servidores Windows
+  hosts: windows_servers  # Grupo de hosts definido en el inventario
+  gather_facts: no  # No recolectar facts para mayor velocidad
+  vars:
+    services:  # Lista de servicios a gestionar
+      - name: Service1
+      - name: Service2
+    wait_time: 30  # Tiempo de espera en segundos
+    max_retries: 3  # Número máximo de reintentos en caso de fallo
+    delay_between_retries: 10  # Tiempo de espera entre reintentos (en segundos)
+    tiempo_espera: 90  # Define el tiempo de espera en segundos
+    hora_limite: "14:15"  # Hora límite en formato "HH:mm"
+    ruta_origen: "C:/FTP_SITR/LocalUser/TELECOLLECTE/ACQUISITION"
+    ruta_destino: "C:/FTP_SITR/LocalUser/TELECOLLECTE/no_procesado"
+  roles:
+    - SRVMDCPRO03  # Llama al rol
