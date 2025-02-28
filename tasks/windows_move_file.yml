@@ -1,0 +1,62 @@
+---
+- name: Obtener la fecha y hora actual
+  ansible.windows.win_shell: |
+    Get-Date -Format "yyyy-MM-dd HH:mm"
+  register: current_date
+
+- name: Mostrar la fecha y hora actual
+  debug:
+    var: current_date.stdout
+
+- name: Convertir la hora límite a timestamp (ticks)
+  ansible.windows.win_shell: |
+    (Get-Date "{{ hora_limite }}").ToFileTime()
+  register: timestamp_limite
+
+- name: Limpiar el valor de timestamp_limite y convertirlo a segundos
+  set_fact:
+    timestamp_limite_clean: "{{ timestamp_limite.stdout | regex_replace('\\r\\n', '') | int // 10000000 }}"
+
+- name: Mostrar el valor de timestamp_limite_clean
+  debug:
+    var: timestamp_limite_clean
+
+- name: Crear ruta de destino si no existe
+  ansible.windows.win_file:
+    path: "{{ ruta_destino }}"
+    state: directory
+
+- name: Listar archivos en la ruta de monitoreo
+  ansible.windows.win_shell: |
+    Get-ChildItem -Path "{{ ruta_origen }}"
+  register: lista_archivos
+
+- name: Mostrar lista de archivos
+  debug:
+    var: lista_archivos.stdout
+
+- name: Buscar archivos en la ruta de monitoreo
+  ansible.windows.win_find:
+    paths: "{{ ruta_origen }}"
+    age: "-{{ timestamp_limite_clean }}"
+    age_stamp: mtime
+  register: archivos_antiguos
+
+- name: Mostrar salida completa de win_find
+  debug:
+    var: archivos_antiguos
+- name: Mostrar salida completa de win_find
+  debug:
+    var: archivos_antiguos
+
+- name: Mover archivos antiguos a la ruta de destino
+  ansible.windows.win_shell: |
+    Move-Item -Path "{{ item.path }}" -Destination "{{ ruta_destino }}\\{{ item.filename }}"
+  loop: "{{ archivos_antiguos.files }}"
+  when: archivos_antiguos.files | length > 0
+  register: resultado_mover
+  ignore_errors: yes  # Continuar incluso si falla
+
+- name: Mostrar resultado de mover archivos
+  debug:
+    var: resultado_mover
