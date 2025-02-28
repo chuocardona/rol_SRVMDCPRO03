@@ -1,0 +1,12 @@
+# tasks/main.yml
+- name: Detener el servicio de Windows
+  include_tasks: windows_service_stop.yml
+
+- name: Verificar el directorio
+  include_tasks: check_directory.yml
+
+- name: Mover archivos en Windows
+  include_tasks: windows_move_file.yml
+
+- name: Reiniciar el servicio de Windows
+  include_tasks: windows_restart.yml
