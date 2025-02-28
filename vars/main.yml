@@ -1,5 +1,12 @@
-# vars/main.yml
-service_name: MiServicio
-directory_path: C:\MiDirectorio
-source_path: C:\Origen\archivo.txt
-destination_path: C:\Destino\archivo.txt
+# roles/SRVMDCPRO03/vars/main.yml
+---
+services:
+  - name: Service1
+  - name: Service2
+wait_time: 30
+max_retries: 3
+delay_between_retries: 10
+tiempo_espera: 90
+hora_limite: "14:15"
+ruta_origen: "C:/FTP_SITR/LocalUser/TELECOLLECTE/ACQUISITION"
+ruta_destino: "C:/FTP_SITR/LocalUser/TELECOLLECTE/no_procesado"
